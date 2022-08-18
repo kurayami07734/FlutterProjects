@@ -1,7 +1,6 @@
-import 'dart:developer' as dev show log;
-
 import 'package:firebase_core/firebase_core.dart';
 import '../constants/routes.dart';
+import '../utils/show_error_dialog.dart';
 import 'package:firstfire/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +52,31 @@ class _LoginViewState extends State<LoginView> {
                       (_) => false,
                     );
                   } on FirebaseAuthException catch (e) {
-                    dev.log(e.toString());
+                    switch (e.code) {
+                      case "wrong-password":
+                        {
+                          await showErrorDialog(
+                              context: context, errorMessage: "Wrong password");
+                          break;
+                        }
+                      case "user-not-found":
+                        {
+                          await showErrorDialog(
+                              context: context,
+                              errorMessage: "User is not yet registed");
+                          break;
+                        }
+                      default:
+                        {
+                          await showErrorDialog(
+                              context: context,
+                              errorMessage: "Error : ${e.code}");
+                          break;
+                        }
+                    }
+                  } catch (e) {
+                    await showErrorDialog(
+                        context: context, errorMessage: e.toString());
                   }
                 },
                 child: Text("Login"),
