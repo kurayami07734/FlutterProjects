@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import '../constants/routes.dart';
 import 'package:firstfire/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -30,7 +31,7 @@ class _NotesViewState extends State<NotesView> {
                   if (shouldLogout) {
                     FirebaseAuth.instance.signOut();
                     Navigator.of(context)
-                        .pushNamedAndRemoveUntil("/login/", (_) => false);
+                        .pushNamedAndRemoveUntil(loginRoute, (_) => false);
                   }
                   dev.log(shouldLogout.toString());
               }

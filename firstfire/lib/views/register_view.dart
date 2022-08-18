@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import '../constants/routes.dart';
 import 'package:firstfire/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -41,17 +42,20 @@ class _RegisterViewState extends State<RegisterView> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  final userCredentials = await FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
-                          email: _email.text, password: _password.text);
-                  print(userCredentials);
+                  try {
+                    final userCredentials = await FirebaseAuth.instance
+                        .createUserWithEmailAndPassword(
+                            email: _email.text, password: _password.text);
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil(loginRoute, (_) => false);
+                  } on FirebaseAuthException catch (e) {}
                 },
                 child: Text("Register"),
               ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context)
-                      .pushNamedAndRemoveUntil("/login/", (route) => false);
+                      .pushNamedAndRemoveUntil(loginRoute, (route) => false);
                 },
                 child: Text("Already registered? Login here"),
               )
