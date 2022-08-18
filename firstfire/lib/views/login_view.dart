@@ -1,3 +1,5 @@
+import 'dart:developer' as dev show log;
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firstfire/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -46,9 +48,10 @@ class _LoginViewState extends State<LoginView> {
                     final userCredentials = await FirebaseAuth.instance
                         .signInWithEmailAndPassword(
                             email: _email.text, password: _password.text);
-                    print(userCredentials);
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil("/notes/", (_) => false);
                   } on FirebaseAuthException catch (e) {
-                    print(e.toString());
+                    dev.log(e.toString());
                   }
                 },
                 child: Text("Login"),

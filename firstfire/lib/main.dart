@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firstfire/views/notes_view.dart';
 import 'views/register_view.dart';
 import 'views/login_view.dart';
 import 'views/home_view.dart';
@@ -26,7 +27,8 @@ class MyApp extends StatelessWidget {
       routes: {
         "/login/": (context) => LoginView(),
         "/register/": (context) => RegisterView(),
-        "/emailVerify/": (context) => EmailVerifyView()
+        "/emailVerify/": (context) => EmailVerifyView(),
+        "/notes/": (context) => NotesView(),
       },
     );
   }
