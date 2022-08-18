@@ -23,6 +23,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: HomeView(),
+      routes: {
+        "/login/": (context) => LoginView(),
+        "/register/": (context) => RegisterView(),
+        "/emailVerify/": (context) => EmailVerifyView()
+      },
     );
   }
 }

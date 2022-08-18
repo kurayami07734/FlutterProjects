@@ -15,20 +15,23 @@ class EmailVerifyView extends StatefulWidget {
 class _EmailVerifyViewState extends State<EmailVerifyView> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text("Please verify your email address"),
-        TextButton(
-          onPressed: () async {
-            final user = FirebaseAuth.instance.currentUser;
-            print(user?.email ?? "email");
-            await user?.sendEmailVerification();
-          },
-          child: Text("Send verification"),
-        ),
-      ],
+    return Scaffold(
+      appBar: AppBar(title: Text("Verify your email")),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text("Please verify your email address"),
+          TextButton(
+            onPressed: () async {
+              final user = FirebaseAuth.instance.currentUser;
+              print(user?.email ?? "email");
+              await user?.sendEmailVerification();
+            },
+            child: Text("Send verification"),
+          ),
+        ],
+      ),
     );
   }
 }

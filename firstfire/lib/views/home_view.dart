@@ -10,30 +10,25 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Home"),
-      ),
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              {
-                final user = FirebaseAuth.instance.currentUser;
-                final username = user?.email ?? "default name";
-                final isVerified = user?.emailVerified ?? false;
-                if (isVerified) {
-                  return Text("$username is verified and signed in");
-                }
-                return LoginView();
-              }
-            default:
-              return const Text("loading");
-          }
-        },
-      ),
+    return FutureBuilder(
+      future: Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            // {
+            //   final user = FirebaseAuth.instance.currentUser;
+            //   final username = user?.email ?? "default name";
+            //   final isVerified = user?.emailVerified ?? false;
+            //   if (isVerified) {
+            //     return Text("$username is verified and signed in");
+            //   }
+            return LoginView();
+
+          default:
+            return const Text("loading");
+        }
+      },
     );
   }
 }
