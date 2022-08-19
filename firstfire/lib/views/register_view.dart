@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import '../utils/show_error_dialog.dart';
 import '../constants/routes.dart';
 import 'package:firstfire/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -46,9 +47,35 @@ class _RegisterViewState extends State<RegisterView> {
                     final userCredentials = await FirebaseAuth.instance
                         .createUserWithEmailAndPassword(
                             email: _email.text, password: _password.text);
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil(loginRoute, (_) => false);
-                  } on FirebaseAuthException catch (e) {}
+                    Navigator.of(context).pushNamed(emailVerifyRoute);
+                  } on FirebaseAuthException catch (e) {
+                    switch (e.code) {
+                      case "weak-password":
+                        {
+                          await showErrorDialog(
+                              context: context,
+                              errorMessage: "Password is weak");
+                          break;
+                        }
+                      case "invalid-email":
+                        {
+                          await showErrorDialog(
+                              context: context,
+                              errorMessage: "valid email is required");
+                          break;
+                        }
+                      default:
+                        {
+                          await showErrorDialog(
+                              context: context,
+                              errorMessage: "Error: ${e.code}");
+                          break;
+                        }
+                    }
+                  } catch (e) {
+                    await showErrorDialog(
+                        context: context, errorMessage: e.toString());
+                  }
                 },
                 child: Text("Register"),
               ),

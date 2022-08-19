@@ -47,10 +47,15 @@ class _LoginViewState extends State<LoginView> {
                     final userCredentials = await FirebaseAuth.instance
                         .signInWithEmailAndPassword(
                             email: _email.text, password: _password.text);
+                    if (FirebaseAuth.instance.currentUser?.emailVerified ??
+                        false) {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        notesRoute,
+                        (_) => false,
+                      );
+                    }
                     Navigator.of(context).pushNamedAndRemoveUntil(
-                      notesRoute,
-                      (_) => false,
-                    );
+                        emailVerifyRoute, (route) => false);
                   } on FirebaseAuthException catch (e) {
                     switch (e.code) {
                       case "wrong-password":
@@ -91,9 +96,8 @@ class _LoginViewState extends State<LoginView> {
                 child: Text("New User? Register here!"),
               ),
               ElevatedButton(
-                  onPressed: () => Navigator.of(context)
-                      .pushNamedAndRemoveUntil(
-                          emailVerifyRoute, (route) => false),
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed(emailVerifyRoute),
                   child: Text("Verify your email here"))
             ]);
           }),
