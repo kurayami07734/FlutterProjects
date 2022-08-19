@@ -1,8 +1,7 @@
-import 'package:firebase_core/firebase_core.dart';
+import '../services/auth/auth_exceptions.dart';
+import '../services/auth/auth_service.dart';
 import '../constants/routes.dart';
 import '../utils/show_error_dialog.dart';
-import 'package:firstfire/firebase_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
@@ -21,9 +20,7 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       appBar: AppBar(title: Text("Login")),
       body: FutureBuilder(
-          future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          ),
+          future: AuthService.fromFirebase().initialize(),
           builder: (context, snapshot) {
             return Column(children: [
               TextField(
@@ -44,44 +41,33 @@ class _LoginViewState extends State<LoginView> {
               ElevatedButton(
                 onPressed: () async {
                   try {
-                    final userCredentials = await FirebaseAuth.instance
-                        .signInWithEmailAndPassword(
-                            email: _email.text, password: _password.text);
-                    if (FirebaseAuth.instance.currentUser?.emailVerified ??
+                    final userCredentials =
+                        await AuthService.fromFirebase().login(
+                      email: _email.text,
+                      password: _password.text,
+                    );
+                    if (AuthService.fromFirebase()
+                            .currentUser
+                            ?.isEmailVerified ??
                         false) {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                         notesRoute,
                         (_) => false,
                       );
+                    } else {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          emailVerifyRoute, (route) => false);
                     }
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        emailVerifyRoute, (route) => false);
-                  } on FirebaseAuthException catch (e) {
-                    switch (e.code) {
-                      case "wrong-password":
-                        {
-                          await showErrorDialog(
-                              context: context, errorMessage: "Wrong password");
-                          break;
-                        }
-                      case "user-not-found":
-                        {
-                          await showErrorDialog(
-                              context: context,
-                              errorMessage: "User is not yet registed");
-                          break;
-                        }
-                      default:
-                        {
-                          await showErrorDialog(
-                              context: context,
-                              errorMessage: "Error : ${e.code}");
-                          break;
-                        }
-                    }
-                  } catch (e) {
+                  } on UserNotFoundAuthException {
                     await showErrorDialog(
-                        context: context, errorMessage: e.toString());
+                        context: context,
+                        errorMessage: "User is not yet registed");
+                  } on WrongPasswordAuthException {
+                    await showErrorDialog(
+                        context: context, errorMessage: "Wrong password");
+                  } on GenericAuthException {
+                    await showErrorDialog(
+                        context: context, errorMessage: "failed to login");
                   }
                 },
                 child: Text("Login"),

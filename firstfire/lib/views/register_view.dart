@@ -1,8 +1,7 @@
-import 'package:firebase_core/firebase_core.dart';
+import '../services/auth/auth_exceptions.dart';
+import '../services/auth/auth_service.dart';
 import '../utils/show_error_dialog.dart';
 import '../constants/routes.dart';
-import 'package:firstfire/firebase_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class RegisterView extends StatefulWidget {
@@ -21,9 +20,7 @@ class _RegisterViewState extends State<RegisterView> {
     return Scaffold(
       appBar: AppBar(title: Text("Register")),
       body: FutureBuilder(
-          future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          ),
+          future: AuthService.fromFirebase().initialize(),
           builder: (context, snapshot) {
             return Column(children: [
               TextField(
@@ -44,37 +41,24 @@ class _RegisterViewState extends State<RegisterView> {
               ElevatedButton(
                 onPressed: () async {
                   try {
-                    final userCredentials = await FirebaseAuth.instance
-                        .createUserWithEmailAndPassword(
+                    final userCredentials = await AuthService.fromFirebase()
+                        .createUser(
                             email: _email.text, password: _password.text);
                     Navigator.of(context).pushNamed(emailVerifyRoute);
-                  } on FirebaseAuthException catch (e) {
-                    switch (e.code) {
-                      case "weak-password":
-                        {
-                          await showErrorDialog(
-                              context: context,
-                              errorMessage: "Password is weak");
-                          break;
-                        }
-                      case "invalid-email":
-                        {
-                          await showErrorDialog(
-                              context: context,
-                              errorMessage: "valid email is required");
-                          break;
-                        }
-                      default:
-                        {
-                          await showErrorDialog(
-                              context: context,
-                              errorMessage: "Error: ${e.code}");
-                          break;
-                        }
-                    }
-                  } catch (e) {
+                  } on WeakPasswordAuthException {
                     await showErrorDialog(
-                        context: context, errorMessage: e.toString());
+                        context: context, errorMessage: "Password is weak");
+                  } on InvalidEmailAuthException {
+                    await showErrorDialog(
+                        context: context,
+                        errorMessage: "valid email is required");
+                  } on EmailAlreadyInUseAuthException {
+                    await showErrorDialog(
+                        context: context,
+                        errorMessage: "Email is already in use");
+                  } on GenericAuthException {
+                    await showErrorDialog(
+                        context: context, errorMessage: "failed to register");
                   }
                 },
                 child: Text("Register"),

@@ -1,10 +1,10 @@
-import 'package:firstfire/views/notes_view.dart';
+import 'views/notes_view.dart';
 import 'views/register_view.dart';
 import 'views/login_view.dart';
 import 'views/home_view.dart';
 import 'views/email_verify_view.dart';
 import 'package:flutter/material.dart';
-import './constants/routes.dart';
+import 'constants/routes.dart';
 
 void main() {
   runApp(const MyApp());

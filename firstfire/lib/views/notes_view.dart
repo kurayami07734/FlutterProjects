@@ -1,10 +1,8 @@
-import '../constants/routes.dart';
+import '../services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import '../constants/routes.dart';
 import '../utils/show_logout_dialog.dart';
-import 'dart:developer' as dev show log;
-
-enum MenuActions { logout, login, register, verifyEmail }
+import '../enums/menu_actions.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({Key? key}) : super(key: key);
@@ -26,11 +24,10 @@ class _NotesViewState extends State<NotesView> {
                 case MenuActions.logout:
                   final shouldLogout = await showLogoutDialog(context: context);
                   if (shouldLogout) {
-                    FirebaseAuth.instance.signOut();
+                    AuthService.fromFirebase().logout();
                     Navigator.of(context)
                         .pushNamedAndRemoveUntil(loginRoute, (_) => false);
                   }
-                  dev.log(shouldLogout.toString());
               }
             },
             itemBuilder: (context) {
@@ -38,30 +35,12 @@ class _NotesViewState extends State<NotesView> {
                 PopupMenuItem<MenuActions>(
                   value: MenuActions.logout,
                   child: Text("Logout"),
-                ),
-                PopupMenuItem<MenuActions>(
-                  value: MenuActions.login,
-                  child: Text("Login"),
-                ),
-                PopupMenuItem<MenuActions>(
-                  value: MenuActions.register,
-                  child: Text("Register"),
-                ),
-                PopupMenuItem<MenuActions>(
-                  value: MenuActions.verifyEmail,
-                  child: Text("Verify Email"),
-                ),
+                )
               ];
             },
           )
         ],
       ),
-      // body: FutureBuilder(
-      //   future: Firebase.initializeApp(
-      //     options: DefaultFirebaseOptions.currentPlatform,
-      //   ),
-      //   builder: ((context, snapshot) {}),
-      // ),
     );
   }
 }
