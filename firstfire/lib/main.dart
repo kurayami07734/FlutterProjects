@@ -1,5 +1,5 @@
 import 'views/notes/notes_view.dart';
-import 'views/notes/new_note_view.dart';
+import 'views/notes/create_update_note_view.dart';
 import 'views/register_view.dart';
 import 'views/login_view.dart';
 import 'views/home_view.dart';
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         registerRoute: (_) => RegisterView(),
         emailVerifyRoute: (_) => const EmailVerifyView(),
         notesRoute: (_) => NotesView(),
-        newNoteRoute: (_) => NewNoteView(),
+        createUpdateNoteRoute: (_) => CreateUpdateNoteView(),
       },
     );
   }
