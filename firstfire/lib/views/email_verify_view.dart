@@ -1,4 +1,4 @@
-import 'package:firstfire/services/auth/auth_service.dart';
+import '../services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import "../constants/routes.dart";
 

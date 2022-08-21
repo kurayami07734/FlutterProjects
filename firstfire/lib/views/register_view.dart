@@ -1,6 +1,6 @@
 import '../services/auth/auth_exceptions.dart';
 import '../services/auth/auth_service.dart';
-import '../utils/show_error_dialog.dart';
+import '../utils/dialogs/error_dialog.dart';
 import '../constants/routes.dart';
 import 'package:flutter/material.dart';
 
@@ -47,18 +47,24 @@ class _RegisterViewState extends State<RegisterView> {
                     Navigator.of(context).pushNamed(emailVerifyRoute);
                   } on WeakPasswordAuthException {
                     await showErrorDialog(
-                        context: context, errorMessage: "Password is weak");
+                      context: context,
+                      content: "Password is weak",
+                    );
                   } on InvalidEmailAuthException {
                     await showErrorDialog(
-                        context: context,
-                        errorMessage: "valid email is required");
+                      context: context,
+                      content: "valid email is required",
+                    );
                   } on EmailAlreadyInUseAuthException {
                     await showErrorDialog(
-                        context: context,
-                        errorMessage: "Email is already in use");
+                      context: context,
+                      content: "Email is already in use",
+                    );
                   } on GenericAuthException {
                     await showErrorDialog(
-                        context: context, errorMessage: "failed to register");
+                      context: context,
+                      content: "failed to register",
+                    );
                   }
                 },
                 child: Text("Register"),

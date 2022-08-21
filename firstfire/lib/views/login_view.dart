@@ -1,7 +1,7 @@
 import '../services/auth/auth_exceptions.dart';
 import '../services/auth/auth_service.dart';
 import '../constants/routes.dart';
-import '../utils/show_error_dialog.dart';
+import '../utils/dialogs/error_dialog.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
@@ -60,14 +60,13 @@ class _LoginViewState extends State<LoginView> {
                     }
                   } on UserNotFoundAuthException {
                     await showErrorDialog(
-                        context: context,
-                        errorMessage: "User is not yet registed");
+                        context: context, content: "User is not yet registed");
                   } on WrongPasswordAuthException {
                     await showErrorDialog(
-                        context: context, errorMessage: "Wrong password");
+                        context: context, content: "Wrong password");
                   } on GenericAuthException {
                     await showErrorDialog(
-                        context: context, errorMessage: "failed to login");
+                        context: context, content: "failed to login");
                   }
                 },
                 child: Text("Login"),
