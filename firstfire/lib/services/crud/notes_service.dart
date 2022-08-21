@@ -7,11 +7,16 @@ import '../../constants/crud.dart';
 import './database_note.dart';
 import './database_user.dart';
 
+extension Filter<T> on Stream<List<T>> {
+  Stream<List<T>> filter(bool Function(T) where) =>
+      map((items) => items.where(where).toList());
+}
+
 class NotesService {
   Database? _db;
+  DatabaseUser? _user;
   List<DatabaseNote> _notes = [];
-
-  late final _notesStreamController;
+  late final StreamController<List<DatabaseNote>> _notesStreamController;
 
   // making notesService a singleton class
   static final NotesService _shared = NotesService._sharedInstance();
@@ -30,7 +35,17 @@ class NotesService {
     _notesStreamController.add(_notes);
   }
 
-  Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream;
+  Stream<List<DatabaseNote>> get allNotes =>
+      _notesStreamController.stream.filter(
+        (note) {
+          final currentUser = _user;
+          if (currentUser != null) {
+            return note.userId == currentUser.id;
+          } else {
+            throw UserShouldBeSetBeforeReadingAllNotesException();
+          }
+        },
+      );
 
   Future<void> _ensureDbIsOpen() async {
     try {
@@ -42,13 +57,18 @@ class NotesService {
     return _db?.isOpen ?? false;
   }
 
-  Future<DatabaseUser> getOrCreateUser({required String email}) async {
+  Future<DatabaseUser> getOrCreateUser({
+    required String email,
+    bool setAsCurrentUser = true,
+  }) async {
     await _ensureDbIsOpen();
     try {
       final user = await getUser(email: email);
+      if (setAsCurrentUser) _user = user;
       return user;
     } on CouldNotFindUserException {
       final createdUser = await createUser(email: email);
+      if (setAsCurrentUser) _user = createdUser;
       return createdUser;
     } catch (e) {
       rethrow;
@@ -78,10 +98,15 @@ class NotesService {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     await getNote(id: note.id);
-    int updateCount = await db.update(noteTable, {
-      textColumn: text,
-      isSyncedWithCloudColumn: 0,
-    });
+    int updateCount = await db.update(
+      noteTable,
+      {
+        textColumn: text,
+        isSyncedWithCloudColumn: 0,
+      },
+      where: "id = ?",
+      whereArgs: [note.id],
+    );
     if (updateCount == 0) throw CouldNotDeleteNoteException();
     final updatedNote = await getNote(id: note.id);
     _notes.removeWhere((n) => n.id == note.id);
