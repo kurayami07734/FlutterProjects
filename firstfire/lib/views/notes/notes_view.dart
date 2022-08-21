@@ -1,3 +1,4 @@
+import '../../services/crud/database_note.dart';
 import '../../services/crud/notes_service.dart';
 import '../../services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -19,15 +20,15 @@ class _NotesViewState extends State<NotesView> {
   @override
   void initState() {
     _notesService = NotesService();
-    _notesService.open();
+    if (!_notesService.isDbOpen()) _notesService.open();
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _notesService.close();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _notesService.close();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -73,17 +74,36 @@ class _NotesViewState extends State<NotesView> {
                   stream: _notesService.allNotes,
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-
                       case ConnectionState.active:
-                        return const Text("waiting for all notes");
+                        {
+                          if (snapshot.hasData) {
+                            final notes = snapshot.data as List<DatabaseNote>;
+                            // print(notes);
+                            // return Text("got the notes");
+                            return ListView.builder(
+                                itemCount: notes.length,
+                                itemBuilder: (context, index) {
+                                  final note = notes[index];
+                                  return ListTile(
+                                    title: Text(
+                                      note.text,
+                                      maxLines: 1,
+                                      softWrap: false,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  );
+                                });
+                          }
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
                       default:
-                        return const CircularProgressIndicator();
+                        return const Center(child: CircularProgressIndicator());
                     }
                   },
                 );
               default:
-                return const CircularProgressIndicator();
+                return const Center(child: CircularProgressIndicator());
             }
           }),
     );
