@@ -78,7 +78,11 @@ class MockAuthProvider implements AuthProvider {
     } else if (password.length < 6) {
       throw WeakPasswordAuthException();
     }
-    _user = AuthUser(isEmailVerified: false, email: email);
+    _user = AuthUser(
+      id: "my_id",
+      isEmailVerified: false,
+      email: email,
+    );
     return Future.value(_user);
   }
 
@@ -95,6 +99,10 @@ class MockAuthProvider implements AuthProvider {
     if (!isInitialized) throw NotInitializedException();
     if (_user != null) throw UserNotFoundAuthException();
     await Future.delayed(Duration(seconds: 1));
-    _user = AuthUser(isEmailVerified: true, email: "foo@bar.baz");
+    _user = AuthUser(
+      id: "my_id",
+      isEmailVerified: true,
+      email: "foo@bar.baz",
+    );
   }
 }
