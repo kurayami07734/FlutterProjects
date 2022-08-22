@@ -1,6 +1,6 @@
+import '../../services/cloud/cloud_note.dart';
+import '../../services/cloud/firebase_cloud_storage.dart';
 import './notes_list_view.dart';
-import '../../services/crud/database_note.dart';
-import '../../services/crud/notes_service.dart';
 import '../../services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import '../../constants/routes.dart';
@@ -15,13 +15,14 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
-  String get userEmail => AuthService.fromFirebase().currentUser!.email;
-  late final NotesService _notesService;
+  late final FirebaseCloudStorage _notesService;
+
+  String get userId => AuthService.fromFirebase().currentUser!.id;
 
   @override
   void initState() {
-    _notesService = NotesService();
-    if (!_notesService.isDbOpen()) _notesService.open();
+    _notesService = FirebaseCloudStorage();
+    // if (!_notesService.isDbOpen()) _notesService.open();
     super.initState();
   }
 
@@ -68,46 +69,37 @@ class _NotesViewState extends State<NotesView> {
           )
         ],
       ),
-      body: FutureBuilder(
-          future: _notesService.getOrCreateUser(email: userEmail),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.done:
-                return StreamBuilder(
-                  stream: _notesService.allNotes,
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.active:
-                        {
-                          if (snapshot.hasData) {
-                            final notes = snapshot.data as List<DatabaseNote>;
-                            // print(notes);
-                            // return Text("got the notes");
-                            return NotesListView(
-                                notes: notes,
-                                onTap: ((note) {
-                                  Navigator.of(context).pushNamed(
-                                    createUpdateNoteRoute,
-                                    arguments: note,
-                                  );
-                                }),
-                                onDeleteNote: (note) async {
-                                  await _notesService.deleteNote(
-                                      noteId: note.id);
-                                });
-                          }
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                      default:
-                        return const Center(child: CircularProgressIndicator());
-                    }
-                  },
-                );
-              default:
+      body: StreamBuilder(
+        stream: _notesService.allNotes(ownerUserId: userId),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.active:
+              {
+                if (snapshot.hasData) {
+                  final notes = snapshot.data as Iterable<CloudNote>;
+                  // print(notes);
+                  // return Text("got the notes");
+                  return NotesListView(
+                      notes: notes,
+                      onTap: ((note) {
+                        Navigator.of(context).pushNamed(
+                          createUpdateNoteRoute,
+                          arguments: note,
+                        );
+                      }),
+                      onDeleteNote: (note) async {
+                        await _notesService.deleteNote(
+                          documentId: note.documentId,
+                        );
+                      });
+                }
                 return const Center(child: CircularProgressIndicator());
-            }
-          }),
+              }
+            default:
+              return const Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
     );
   }
 }
