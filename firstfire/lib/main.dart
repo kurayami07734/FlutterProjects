@@ -20,8 +20,11 @@ class MyApp extends StatelessWidget {
     WidgetsFlutterBinding.ensureInitialized();
     return MaterialApp(
       title: 'Notes App',
+      themeMode: ThemeMode.system,
+      darkTheme: ThemeData.dark(),
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        brightness: Brightness.light,
       ),
       home: const HomeView(),
       routes: {
