@@ -2,7 +2,6 @@ import '../../utils/generics/get_argument.dart';
 import '../../services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import "../../services/cloud/cloud_note.dart";
-import "../../services/cloud/cloud_store_exceptions.dart";
 import "../../services/cloud/firebase_cloud_storage.dart";
 
 class CreateUpdateNoteView extends StatefulWidget {
@@ -80,7 +79,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("New Note"),
+        title: const Text("New Note"),
       ),
       body: FutureBuilder(
         future: createOrGetExistingNote(),
@@ -99,7 +98,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
                 );
               }
             default:
-              return CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
           }
         },
       ),

@@ -13,16 +13,16 @@ class _EmailVerifyViewState extends State<EmailVerifyView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Verify your email")),
+      appBar: AppBar(title: const Text("Verify your email")),
       body: Center(
         child: Column(
           children: [
-            Text("Please verify your email address"),
+            const Text("Please verify your email address"),
             TextButton(
               onPressed: () async {
                 AuthService.fromFirebase().sendEmailVerification();
               },
-              child: Text("Send verification email"),
+              child: const Text("Send verification email"),
             ),
             TextButton(
               onPressed: () async {
@@ -32,7 +32,7 @@ class _EmailVerifyViewState extends State<EmailVerifyView> {
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil(registerRoute, (route) => false);
               },
-              child: Text("Restart process"),
+              child: const Text("Restart process"),
             )
           ],
         ),

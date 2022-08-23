@@ -23,15 +23,16 @@ void main() {
     test("initialization should take less than 2 seconds", () async {
       await provider.initialize();
       expect(provider.isInitialized, true);
-    }, timeout: Timeout(Duration(seconds: 2)));
+    }, timeout: const Timeout(Duration(seconds: 2)));
     test("invalid email should throw exception", () async {
       final badEmailUser =
           await provider.createUser(email: "adfs", password: "124d2433");
-      expect(badEmailUser, throwsA(TypeMatcher<InvalidEmailAuthException>()));
+      expect(badEmailUser,
+          throwsA(const TypeMatcher<InvalidEmailAuthException>()));
       final badPasswordUser =
           await provider.createUser(email: "ad@bc.di", password: "124");
-      expect(
-          badPasswordUser, throwsA(TypeMatcher<WeakPasswordAuthException>()));
+      expect(badPasswordUser,
+          throwsA(const TypeMatcher<WeakPasswordAuthException>()));
       final user =
           await provider.createUser(email: "ad@bc.di", password: "sadfs312");
       expect(provider.currentUser, user);
@@ -52,17 +53,16 @@ class MockAuthProvider implements AuthProvider {
     required String password,
   }) async {
     if (!isInitialized) throw NotInitializedException();
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     return login(email: email, password: password);
   }
 
   @override
-  // TODO: implement currentUser
   AuthUser? get currentUser => _user;
 
   @override
   Future<void> initialize() async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     _isInitialized = true;
   }
 
@@ -90,7 +90,7 @@ class MockAuthProvider implements AuthProvider {
   Future<void> logout() async {
     if (!isInitialized) throw NotInitializedException();
     if (_user != null) throw UserNotFoundAuthException();
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     _user = null;
   }
 
@@ -98,8 +98,8 @@ class MockAuthProvider implements AuthProvider {
   Future<void> sendEmailVerification() async {
     if (!isInitialized) throw NotInitializedException();
     if (_user != null) throw UserNotFoundAuthException();
-    await Future.delayed(Duration(seconds: 1));
-    _user = AuthUser(
+    await Future.delayed(const Duration(seconds: 1));
+    _user = const AuthUser(
       id: "my_id",
       isEmailVerified: true,
       email: "foo@bar.baz",

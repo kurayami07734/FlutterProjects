@@ -17,18 +17,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    WidgetsFlutterBinding.ensureInitialized();
     return MaterialApp(
       title: 'Notes App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeView(),
+      home: const HomeView(),
       routes: {
-        loginRoute: (_) => LoginView(),
-        registerRoute: (_) => RegisterView(),
+        loginRoute: (_) => const LoginView(),
+        registerRoute: (_) => const RegisterView(),
         emailVerifyRoute: (_) => const EmailVerifyView(),
-        notesRoute: (_) => NotesView(),
-        createUpdateNoteRoute: (_) => CreateUpdateNoteView(),
+        notesRoute: (_) => const NotesView(),
+        createUpdateNoteRoute: (_) => const CreateUpdateNoteView(),
       },
     );
   }

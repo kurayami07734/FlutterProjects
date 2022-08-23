@@ -5,7 +5,7 @@ import '../utils/dialogs/error_dialog.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
-  LoginView({Key? key}) : super(key: key);
+  const LoginView({Key? key}) : super(key: key);
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -18,31 +18,31 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login")),
+      appBar: AppBar(title: const Text("Login")),
       body: FutureBuilder(
-          future: AuthService.fromFirebase().initialize(),
-          builder: (context, snapshot) {
-            return Column(children: [
+        future: AuthService.fromFirebase().initialize(),
+        builder: (context, snapshot) {
+          return Column(
+            children: [
               TextField(
                 controller: _email,
-                decoration: InputDecoration(hintText: "Email"),
+                decoration: const InputDecoration(hintText: "Email"),
                 enableSuggestions: false,
                 autocorrect: false,
                 keyboardType: TextInputType.emailAddress,
               ),
               TextField(
                 controller: _password,
-                decoration: InputDecoration(hintText: "Password"),
+                decoration: const InputDecoration(hintText: "Password"),
                 enableSuggestions: false,
                 autocorrect: false,
                 obscureText: true,
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.visiblePassword,
               ),
               ElevatedButton(
                 onPressed: () async {
                   try {
-                    final userCredentials =
-                        await AuthService.fromFirebase().login(
+                    await AuthService.fromFirebase().login(
                       email: _email.text,
                       password: _password.text,
                     );
@@ -60,7 +60,8 @@ class _LoginViewState extends State<LoginView> {
                     }
                   } on UserNotFoundAuthException {
                     await showErrorDialog(
-                        context: context, content: "User is not yet registed");
+                        context: context,
+                        content: "User is not yet registered");
                   } on WrongPasswordAuthException {
                     await showErrorDialog(
                         context: context, content: "Wrong password");
@@ -69,7 +70,7 @@ class _LoginViewState extends State<LoginView> {
                         context: context, content: "failed to login");
                   }
                 },
-                child: Text("Login"),
+                child: const Text("Login"),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -78,14 +79,12 @@ class _LoginViewState extends State<LoginView> {
                     (route) => false,
                   );
                 },
-                child: Text("New User? Register here!"),
+                child: const Text("New User? Register here!"),
               ),
-              ElevatedButton(
-                  onPressed: () =>
-                      Navigator.of(context).pushNamed(emailVerifyRoute),
-                  child: Text("Verify your email here"))
-            ]);
-          }),
+            ],
+          );
+        },
+      ),
     );
   }
 }

@@ -19,13 +19,12 @@ class HomeView extends StatelessWidget {
             {
               final user = AuthService.fromFirebase().currentUser;
               final isVerified = user?.isEmailVerified ?? false;
-              log(isVerified.toString());
-              if (user == null) return LoginView();
-              if (!isVerified) return EmailVerifyView();
-              return NotesView();
+              if (user == null) return const LoginView();
+              if (!isVerified) return const EmailVerifyView();
+              return const NotesView();
             }
           default:
-            return CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
         }
       },
     );
