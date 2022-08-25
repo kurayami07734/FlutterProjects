@@ -1,8 +1,9 @@
-import 'package:firstfire/services/auth/bloc/auth_bloc.dart';
-import 'package:firstfire/services/auth/bloc/auth_event.dart';
-
+import '../services/auth/auth_exceptions.dart';
+import '../services/auth/bloc/auth_bloc.dart';
+import '../services/auth/bloc/auth_event.dart';
 import '../constants/routes.dart';
 import '../services/auth/auth_service.dart';
+import '../services/auth/bloc/auth_state.dart';
 import '../utils/dialogs/error_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,44 +43,38 @@ class _LoginViewState extends State<LoginView> {
                 obscureText: true,
                 keyboardType: TextInputType.visiblePassword,
               ),
-              TextButton(
-                onPressed: () async {
-                  final email = _email.text;
-                  final password = _password.text;
-                  try {
+              BlocListener<AuthBloc, AuthState>(
+                listener: (context, state) async {
+                  if (state is AuthStateLoggedOut) {
+                    if (state.exception is UserNotFoundAuthException) {
+                      await showErrorDialog(
+                        context: context,
+                        content: "User is not yet registered",
+                      );
+                    } else if (state.exception is WrongPasswordAuthException) {
+                      await showErrorDialog(
+                        context: context,
+                        content: "Wrong Credentials",
+                      );
+                    } else if (state.exception is GenericAuthException) {
+                      await showErrorDialog(
+                        context: context,
+                        content: "Authentication error",
+                      );
+                    }
+                  }
+                },
+                child: TextButton(
+                  onPressed: () async {
+                    final email = _email.text;
+                    final password = _password.text;
                     context.read<AuthBloc>().add(AuthEventLogin(
                           email,
                           password,
                         ));
-                    // await AuthService.fromFirebase().login(
-                    //   email: _email.text,
-                    //   password: _password.text,
-                    // );
-                    // if (AuthService.fromFirebase()
-                    //         .currentUser
-                    //         ?.isEmailVerified ??
-                    //     false) {
-                    //   Navigator.of(context).pushNamedAndRemoveUntil(
-                    //     notesRoute,
-                    //     (_) => false,
-                    //   );
-                    // } else {
-                    //   Navigator.of(context).pushNamedAndRemoveUntil(
-                    //       emailVerifyRoute, (route) => false);
-                    // }
-                  } on UserNotFoundAuthException {
-                    await showErrorDialog(
-                        context: context,
-                        content: "User is not yet registered");
-                  } on WrongPasswordAuthException {
-                    await showErrorDialog(
-                        context: context, content: "Wrong password");
-                  } on GenericAuthException {
-                    await showErrorDialog(
-                        context: context, content: "failed to login");
-                  }
-                },
-                child: const Text("Login"),
+                  },
+                  child: const Text("Login"),
+                ),
               ),
               TextButton(
                 onPressed: () {
