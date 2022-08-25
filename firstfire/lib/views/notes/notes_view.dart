@@ -1,3 +1,7 @@
+import 'package:firstfire/services/auth/bloc/auth_event.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../services/auth/bloc/auth_bloc.dart';
 import '../../services/cloud/cloud_note.dart';
 import '../../services/cloud/firebase_cloud_storage.dart';
 import './notes_list_view.dart';
@@ -52,7 +56,7 @@ class _NotesViewState extends State<NotesView> {
                     context: context,
                   );
                   if (shouldLogout) {
-                    AuthService.fromFirebase().logout();
+                    context.read<AuthBloc>().add(const AuthEventLogout());
                     Navigator.of(context)
                         .pushNamedAndRemoveUntil(loginRoute, (_) => false);
                   }

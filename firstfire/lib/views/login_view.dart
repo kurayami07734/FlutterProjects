@@ -1,8 +1,11 @@
-import '../services/auth/auth_exceptions.dart';
-import '../services/auth/auth_service.dart';
+import 'package:firstfire/services/auth/bloc/auth_bloc.dart';
+import 'package:firstfire/services/auth/bloc/auth_event.dart';
+
 import '../constants/routes.dart';
+import '../services/auth/auth_service.dart';
 import '../utils/dialogs/error_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -39,25 +42,31 @@ class _LoginViewState extends State<LoginView> {
                 obscureText: true,
                 keyboardType: TextInputType.visiblePassword,
               ),
-              ElevatedButton(
+              TextButton(
                 onPressed: () async {
+                  final email = _email.text;
+                  final password = _password.text;
                   try {
-                    await AuthService.fromFirebase().login(
-                      email: _email.text,
-                      password: _password.text,
-                    );
-                    if (AuthService.fromFirebase()
-                            .currentUser
-                            ?.isEmailVerified ??
-                        false) {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                        notesRoute,
-                        (_) => false,
-                      );
-                    } else {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          emailVerifyRoute, (route) => false);
-                    }
+                    context.read<AuthBloc>().add(AuthEventLogin(
+                          email,
+                          password,
+                        ));
+                    // await AuthService.fromFirebase().login(
+                    //   email: _email.text,
+                    //   password: _password.text,
+                    // );
+                    // if (AuthService.fromFirebase()
+                    //         .currentUser
+                    //         ?.isEmailVerified ??
+                    //     false) {
+                    //   Navigator.of(context).pushNamedAndRemoveUntil(
+                    //     notesRoute,
+                    //     (_) => false,
+                    //   );
+                    // } else {
+                    //   Navigator.of(context).pushNamedAndRemoveUntil(
+                    //       emailVerifyRoute, (route) => false);
+                    // }
                   } on UserNotFoundAuthException {
                     await showErrorDialog(
                         context: context,
@@ -72,7 +81,7 @@ class _LoginViewState extends State<LoginView> {
                 },
                 child: const Text("Login"),
               ),
-              ElevatedButton(
+              TextButton(
                 onPressed: () {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     registerRoute,

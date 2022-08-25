@@ -1,6 +1,7 @@
-import 'dart:developer';
-
-import '../services/auth/auth_service.dart';
+import 'package:firstfire/services/auth/bloc/auth_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../services/auth/bloc/auth_bloc.dart';
+import '../services/auth/bloc/auth_event.dart';
 import './notes/notes_view.dart';
 import './login_view.dart';
 import './email_verify_view.dart';
@@ -11,20 +12,17 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: AuthService.fromFirebase().initialize(),
-      builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.done:
-            {
-              final user = AuthService.fromFirebase().currentUser;
-              final isVerified = user?.isEmailVerified ?? false;
-              if (user == null) return const LoginView();
-              if (!isVerified) return const EmailVerifyView();
-              return const NotesView();
-            }
-          default:
-            return const Center(child: CircularProgressIndicator());
+    context.read<AuthBloc>().add(const AuthEventInitialize());
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        if (state is AuthStateLoggedIn) {
+          return const NotesView();
+        } else if (state is AuthStateNeedsEmailVerification) {
+          return const EmailVerifyView();
+        } else if (state is AuthStateLoggedOut) {
+          return const LoginView();
+        } else {
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );

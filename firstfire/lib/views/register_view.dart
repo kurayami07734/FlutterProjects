@@ -38,7 +38,7 @@ class _RegisterViewState extends State<RegisterView> {
                 obscureText: true,
                 keyboardType: TextInputType.emailAddress,
               ),
-              ElevatedButton(
+              TextButton(
                 onPressed: () async {
                   try {
                     await AuthService.fromFirebase().createUser(
@@ -68,7 +68,7 @@ class _RegisterViewState extends State<RegisterView> {
                 },
                 child: const Text("Register"),
               ),
-              ElevatedButton(
+              TextButton(
                 onPressed: () {
                   Navigator.of(context)
                       .pushNamedAndRemoveUntil(loginRoute, (route) => false);

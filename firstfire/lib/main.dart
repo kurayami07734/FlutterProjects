@@ -1,3 +1,6 @@
+import 'package:firstfire/services/auth/bloc/auth_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firstfire/services/auth/firebase_auth_provider.dart';
 import 'views/notes/notes_view.dart';
 import 'views/notes/create_update_note_view.dart';
 import 'views/register_view.dart';
@@ -26,7 +29,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         brightness: Brightness.light,
       ),
-      home: const HomeView(),
+      home: BlocProvider<AuthBloc>(
+        create: (context) => AuthBloc(FirebaseAuthProvider()),
+        child: const HomeView(),
+      ),
       routes: {
         loginRoute: (_) => const LoginView(),
         registerRoute: (_) => const RegisterView(),
