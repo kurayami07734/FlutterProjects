@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firstfire/services/auth/bloc/auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc(AuthProvider provider) : super(const AuthStateLoading()) {
+  AuthBloc(AuthProvider provider) : super(const AuthStateUninitialized()) {
     on<AuthEventInitialize>(
       (event, emit) async {
         await provider.initialize();
@@ -21,7 +21,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
     on<AuthEventLogin>(
       ((event, emit) async {
-        emit(const AuthStateLoading());
+        emit(const AuthStateUninitialized());
         final email = event.email;
         final password = event.password;
         try {
@@ -45,5 +45,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       }),
     );
+    on<AuthEventSendEmailVerification>(
+      ((event, emit) async {
+        await provider.sendEmailVerification();
+        emit(state);
+      }),
+    );
+    on<AuthEventRegister>();
   }
 }
