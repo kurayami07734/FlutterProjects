@@ -6,6 +6,7 @@ import './notes/notes_view.dart';
 import './login_view.dart';
 import './email_verify_view.dart';
 import 'package:flutter/material.dart';
+import 'register_view.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -21,6 +22,8 @@ class HomeView extends StatelessWidget {
           return const EmailVerifyView();
         } else if (state is AuthStateLoggedOut) {
           return const LoginView();
+        } else if (state is AuthStateRegistering) {
+          return const RegisterView();
         } else {
           return const Center(child: CircularProgressIndicator());
         }

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../services/auth/bloc/auth_bloc.dart';
 import '../services/auth/bloc/auth_state.dart';
 import '../utils/dialogs/error_dialog.dart';
-import '../constants/routes.dart';
 import 'package:flutter/material.dart';
 
 class RegisterView extends StatefulWidget {
