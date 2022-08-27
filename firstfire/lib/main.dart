@@ -1,12 +1,8 @@
 import 'package:firstfire/services/auth/bloc/auth_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firstfire/services/auth/firebase_auth_provider.dart';
-import 'views/notes/notes_view.dart';
 import 'views/notes/create_update_note_view.dart';
-import 'views/register_view.dart';
-import 'views/login_view.dart';
 import 'views/home_view.dart';
-import 'views/email_verify_view.dart';
 import 'package:flutter/material.dart';
 import 'constants/routes.dart';
 

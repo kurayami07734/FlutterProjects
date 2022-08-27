@@ -1,4 +1,3 @@
-import 'package:firstfire/utils/dialogs/loading_dialog.dart';
 import '../services/auth/auth_exceptions.dart';
 import '../services/auth/bloc/auth_bloc.dart';
 import '../services/auth/bloc/auth_event.dart';
@@ -43,45 +42,58 @@ class _LoginViewState extends State<LoginView> {
       },
       child: Scaffold(
         appBar: AppBar(title: const Text("Login")),
-        body: Column(
-          children: [
-            TextField(
-              controller: _email,
-              decoration: const InputDecoration(hintText: "Email"),
-              enableSuggestions: false,
-              autocorrect: false,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            TextField(
-              controller: _password,
-              decoration: const InputDecoration(hintText: "Password"),
-              enableSuggestions: false,
-              autocorrect: false,
-              obscureText: true,
-              keyboardType: TextInputType.visiblePassword,
-            ),
-            TextButton(
-              onPressed: () async {
-                final email = _email.text;
-                final password = _password.text;
-                context.read<AuthBloc>().add(
-                      AuthEventLogin(
-                        email,
-                        password,
-                      ),
-                    );
-              },
-              child: const Text("Login"),
-            ),
-            TextButton(
-              onPressed: () {
-                context.read<AuthBloc>().add(
-                      const AuthEventShouldRegister(),
-                    );
-              },
-              child: const Text("New User? Register here!"),
-            ),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const Text(
+                  "Please log into your account to create and interact with your notes!"),
+              TextField(
+                controller: _email,
+                decoration: const InputDecoration(hintText: "Email"),
+                enableSuggestions: false,
+                autocorrect: false,
+                keyboardType: TextInputType.emailAddress,
+              ),
+              TextField(
+                controller: _password,
+                decoration: const InputDecoration(hintText: "Password"),
+                enableSuggestions: false,
+                autocorrect: false,
+                obscureText: true,
+                keyboardType: TextInputType.visiblePassword,
+              ),
+              TextButton(
+                onPressed: () async {
+                  final email = _email.text;
+                  final password = _password.text;
+                  context.read<AuthBloc>().add(
+                        AuthEventLogin(
+                          email,
+                          password,
+                        ),
+                      );
+                },
+                child: const Text("Login"),
+              ),
+              TextButton(
+                onPressed: () {
+                  context.read<AuthBloc>().add(
+                        const AuthEventShouldRegister(),
+                      );
+                },
+                child: const Text("New User? Register here!"),
+              ),
+              TextButton(
+                onPressed: () {
+                  context
+                      .read<AuthBloc>()
+                      .add(const AuthEventForgotPassword(null));
+                },
+                child: const Text("Forgot your password?"),
+              )
+            ],
+          ),
         ),
       ),
     );
