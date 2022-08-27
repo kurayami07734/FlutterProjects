@@ -5,7 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firstfire/services/auth/bloc/auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc(AuthProvider provider) : super(const AuthStateUninitialized(null)) {
+  AuthBloc(AuthProvider provider)
+      : super(const AuthStateUninitialized(
+          isLoading: true,
+        )) {
     on<AuthEventInitialize>(
       (event, emit) async {
         await provider.initialize();
@@ -16,9 +19,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             isLoading: false,
           ));
         } else if (!user.isEmailVerified) {
-          emit(const AuthStateNeedsEmailVerification());
+          emit(const AuthStateNeedsEmailVerification(false));
         } else {
-          emit(AuthStateLoggedIn(user));
+          emit(AuthStateLoggedIn(
+            user: user,
+            isLoading: false,
+          ));
         }
       },
     );
@@ -40,13 +46,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               exception: null,
               isLoading: false,
             ));
-            emit(const AuthStateNeedsEmailVerification());
+            emit(const AuthStateNeedsEmailVerification(false));
           } else {
             emit(const AuthStateLoggedOut(
               exception: null,
+              isLoading: true,
+              loadingText: "Please wait while we log you in",
+            ));
+            emit(AuthStateLoggedIn(
+              user: user,
               isLoading: false,
             ));
-            emit(AuthStateLoggedIn(user));
           }
         } on Exception catch (e) {
           emit(
@@ -82,7 +92,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
     on<AuthEventShouldRegister>(
       (event, emit) {
-        emit(const AuthStateRegistering(null));
+        emit(const AuthStateRegistering(
+          exception: null,
+          isLoading: false,
+        ));
       },
     );
     on<AuthEventRegister>((event, emit) async {
@@ -94,9 +107,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           password: password,
         );
         await provider.sendEmailVerification();
-        emit(const AuthStateNeedsEmailVerification());
+        emit(const AuthStateNeedsEmailVerification(false));
       } on Exception catch (e) {
-        emit(AuthStateRegistering(e));
+        emit(AuthStateRegistering(
+          exception: e,
+          isLoading: false,
+        ));
       }
     });
   }
