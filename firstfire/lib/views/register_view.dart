@@ -16,6 +16,13 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   final TextEditingController _email = TextEditingController(),
       _password = TextEditingController();
+  bool hidePassword = true;
+
+  void _toggleVisibility() {
+    setState(() {
+      hidePassword = !hidePassword;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +61,10 @@ class _RegisterViewState extends State<RegisterView> {
             children: [
               TextField(
                 controller: _email,
-                decoration: const InputDecoration(hintText: "Email"),
+                decoration: const InputDecoration(
+                  labelText: "Email",
+                  prefixIcon: Icon(Icons.email),
+                ),
                 enableSuggestions: false,
                 autocorrect: false,
                 autofocus: true,
@@ -62,10 +72,18 @@ class _RegisterViewState extends State<RegisterView> {
               ),
               TextField(
                 controller: _password,
-                decoration: const InputDecoration(hintText: "Password"),
+                decoration: InputDecoration(
+                  labelText: "Password",
+                  prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    onPressed: _toggleVisibility,
+                    icon: Icon(
+                        hidePassword ? Icons.visibility : Icons.visibility_off),
+                  ),
+                ),
                 enableSuggestions: false,
                 autocorrect: false,
-                obscureText: true,
+                obscureText: hidePassword,
                 keyboardType: TextInputType.emailAddress,
               ),
               Center(

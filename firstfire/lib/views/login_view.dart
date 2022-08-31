@@ -50,7 +50,10 @@ class _LoginViewState extends State<LoginView> {
                   "Please log into your account to create and interact with your notes!"),
               TextField(
                 controller: _email,
-                decoration: const InputDecoration(hintText: "Email"),
+                decoration: const InputDecoration(
+                  labelText: "Email",
+                  prefixIcon: Icon(Icons.email),
+                ),
                 enableSuggestions: false,
                 autocorrect: false,
                 autofocus: true,
@@ -58,7 +61,10 @@ class _LoginViewState extends State<LoginView> {
               ),
               TextField(
                 controller: _password,
-                decoration: const InputDecoration(hintText: "Password"),
+                decoration: const InputDecoration(
+                  labelText: "Password",
+                  prefixIcon: Icon(Icons.lock),
+                ),
                 enableSuggestions: false,
                 autocorrect: false,
                 obscureText: true,
