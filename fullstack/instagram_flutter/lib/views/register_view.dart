@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:instagram_flutter/utils/colors.dart' as theme;
 import 'package:instagram_flutter/widgets/text_field_input.dart';
+import '../resources/auth_methods.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -40,7 +41,7 @@ class _RegisterViewState extends State<RegisterView> {
           padding: const EdgeInsets.symmetric(horizontal: 32),
           width: double.infinity,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SvgPicture.asset(
@@ -93,7 +94,13 @@ class _RegisterViewState extends State<RegisterView> {
                 ],
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  final email = _email.text;
+                  final password = _password.text;
+                  final bio = _bio.text;
+                  final username = _username.text;
+                  await AuthMethods.registerUser(bio: bio, email: email, password: password, username: username, file: ,);
+                },
                 child: const Text("Register"),
               ),
             ],

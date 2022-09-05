@@ -12,6 +12,10 @@ migrate_working_dir/
 .vscode
 **/firebase_options.dart
 **/google-services.json
+**/key.properties
+.firebase/
+firebase.json
+.firebaserc
 
 # IntelliJ related
 *.iml
