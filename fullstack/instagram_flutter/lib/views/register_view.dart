@@ -99,7 +99,7 @@ class _RegisterViewState extends State<RegisterView> {
                   final password = _password.text;
                   final bio = _bio.text;
                   final username = _username.text;
-                  await AuthMethods.registerUser(bio: bio, email: email, password: password, username: username, file: ,);
+                  // await AuthMethods.registerUser(bio: bio, email: email, password: password, username: username, file: ,);
                 },
                 child: const Text("Register"),
               ),
