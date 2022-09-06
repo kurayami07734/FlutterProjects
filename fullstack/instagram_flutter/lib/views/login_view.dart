@@ -60,7 +60,12 @@ class _LoginViewState extends State<LoginView> {
                 onPressed: () {},
                 child: const Text("Login"),
               ),
-              TextButton(onPressed: () {}, child: const Text("Register here")),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil('/register/', (route) => true);
+                  },
+                  child: const Text("Register here")),
             ],
           ),
         ),

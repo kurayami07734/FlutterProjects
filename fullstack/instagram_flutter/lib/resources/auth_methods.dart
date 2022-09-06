@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:firebase_auth/firebase_auth.dart";
+import 'storage_methods.dart';
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -23,6 +24,11 @@ class AuthMethods {
           email: email,
           password: password,
         );
+        String photoURL = await StorageMethods().uploadToStorage(
+          'profilePics',
+          file,
+          false,
+        );
         _firestore.collection('users').doc(userCred.user!.uid).set({
           'username': username,
           'uid': userCred.user!.uid,
@@ -31,6 +37,7 @@ class AuthMethods {
           'profile-picture': file,
           'followers': [],
           'following': [],
+          'photo-url': photoURL,
         });
         res = 'success';
       }

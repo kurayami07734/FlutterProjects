@@ -1,6 +1,9 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:instagram_flutter/utils/colors.dart' as theme;
+import 'package:instagram_flutter/utils/pick_image.dart';
 import 'package:instagram_flutter/widgets/text_field_input.dart';
 import '../resources/auth_methods.dart';
 
@@ -16,12 +19,14 @@ class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _password;
   late final TextEditingController _bio;
   late final TextEditingController _username;
+  Uint8List? _image;
   @override
   void initState() {
     _email = TextEditingController();
     _password = TextEditingController();
     _bio = TextEditingController();
     _username = TextEditingController();
+    super.initState();
   }
 
   @override
@@ -31,6 +36,13 @@ class _RegisterViewState extends State<RegisterView> {
     _bio.dispose();
     _username.dispose();
     super.dispose();
+  }
+
+  void selectImage() async {
+    Uint8List image = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
   }
 
   @override
@@ -53,17 +65,24 @@ class _RegisterViewState extends State<RegisterView> {
                 children: [
                   Stack(
                     children: [
-                      const CircleAvatar(
-                        radius: 64,
-                        backgroundImage: AssetImage(
-                            'assets/default-user-icon-8-300x300.jpg'),
-                      ),
+                      (_image != null)
+                          ? CircleAvatar(
+                              radius: 64,
+                              backgroundImage: MemoryImage(_image!),
+                            )
+                          : const CircleAvatar(
+                              radius: 64,
+                              backgroundImage: AssetImage(
+                                  'assets/default-user-icon-8-300x300.jpg'),
+                            ),
                       Positioned(
-                          bottom: -10,
-                          left: 80,
-                          child: IconButton(
-                              icon: const Icon(Icons.add_a_photo),
-                              onPressed: (() {}))),
+                        bottom: -10,
+                        left: 80,
+                        child: IconButton(
+                          icon: const Icon(Icons.add_a_photo),
+                          onPressed: () => selectImage(),
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -99,7 +118,14 @@ class _RegisterViewState extends State<RegisterView> {
                   final password = _password.text;
                   final bio = _bio.text;
                   final username = _username.text;
-                  // await AuthMethods.registerUser(bio: bio, email: email, password: password, username: username, file: ,);
+                  var res = await AuthMethods().registerUser(
+                    bio: bio,
+                    email: email,
+                    password: password,
+                    username: username,
+                    file: _image!,
+                  );
+                  print(res);
                 },
                 child: const Text("Register"),
               ),

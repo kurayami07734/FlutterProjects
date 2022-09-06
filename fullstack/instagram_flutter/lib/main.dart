@@ -5,6 +5,7 @@ import 'package:instagram_flutter/responsive/mobile_screen_layout.dart';
 import 'package:instagram_flutter/responsive/responsive_layout.dart';
 import 'package:instagram_flutter/responsive/web_screen_layout.dart';
 import 'package:instagram_flutter/utils/colors.dart' as theme;
+import 'package:instagram_flutter/views/register_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,9 @@ class MyApp extends StatelessWidget {
         webScreenLayout: WebScreenLayout(),
         mobileScreenLayout: MobileScreenLayout(),
       ),
+      routes: {
+        "/register/": (context) => const RegisterView(),
+      },
     );
   }
 }
