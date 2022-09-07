@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:instagram_flutter/resources/auth_methods.dart';
 import 'package:instagram_flutter/utils/colors.dart' as theme;
+import 'package:instagram_flutter/utils/show_snackbar.dart';
 import 'package:instagram_flutter/widgets/text_field_input.dart';
 
 class LoginView extends StatefulWidget {
@@ -13,6 +15,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+  bool _isLoading = false;
   @override
   void initState() {
     _email = TextEditingController();
@@ -34,7 +37,8 @@ class _LoginViewState extends State<LoginView> {
           padding: const EdgeInsets.symmetric(horizontal: 32),
           width: double.infinity,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SvgPicture.asset(
                 'assets/Flunstagram.svg',
@@ -42,23 +46,44 @@ class _LoginViewState extends State<LoginView> {
                 height: 64,
               ),
               const SizedBox(height: 64),
-              TextFieldInput(
-                controller: _email,
-                isPassword: false,
-                hintText: "Email",
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 20),
-              TextFieldInput(
-                controller: _password,
-                isPassword: true,
-                hintText: "Password",
-                keyboardType: TextInputType.emailAddress,
+              Column(
+                children: [
+                  TextFieldInput(
+                    controller: _email,
+                    isPassword: false,
+                    hintText: "Email",
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: 20),
+                  TextFieldInput(
+                    controller: _password,
+                    isPassword: true,
+                    hintText: "Password",
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {},
-                child: const Text("Login"),
+                onPressed: () async {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  String res = await AuthMethods().login(
+                    email: _email.text,
+                    password: _password.text,
+                  );
+                  setState(() {
+                    _isLoading = false;
+                  });
+                  showSnackBar(res, context);
+                },
+                child: _isLoading
+                    ? const CircularProgressIndicator(
+                        strokeWidth: 3,
+                        color: theme.primaryColor,
+                      )
+                    : const Text("Login"),
               ),
               TextButton(
                   onPressed: () {

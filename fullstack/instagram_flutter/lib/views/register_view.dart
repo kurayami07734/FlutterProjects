@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram_flutter/utils/colors.dart' as theme;
 import 'package:instagram_flutter/utils/pick_image.dart';
+import 'package:instagram_flutter/utils/show_snackbar.dart';
 import 'package:instagram_flutter/widgets/text_field_input.dart';
 import '../resources/auth_methods.dart';
 
@@ -85,7 +86,7 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 30),
                   TextFieldInput(
                     controller: _email,
                     hintText: "Email",
@@ -125,7 +126,7 @@ class _RegisterViewState extends State<RegisterView> {
                     username: username,
                     file: _image!,
                   );
-                  print(res);
+                  showSnackBar(res, context);
                 },
                 child: const Text("Register"),
               ),

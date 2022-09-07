@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_flutter/firebase_options.dart';
@@ -25,10 +26,27 @@ class MyApp extends StatelessWidget {
       title: 'Flunstagram',
       theme: ThemeData.dark()
           .copyWith(scaffoldBackgroundColor: theme.mobileBackgroundColor),
-      home: const ResponsiveLayout(
-        webScreenLayout: WebScreenLayout(),
-        mobileScreenLayout: MobileScreenLayout(),
-      ),
+      // home:
+      home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.hasData) {
+                return const ResponsiveLayout(
+                  webScreenLayout: WebScreenLayout(),
+                  mobileScreenLayout: MobileScreenLayout(),
+                );
+              } else {
+                return Center(
+                  child: Text(snapshot.error.toString()),
+                );
+              }
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }),
+
       routes: {
         "/register/": (context) => const RegisterView(),
       },
