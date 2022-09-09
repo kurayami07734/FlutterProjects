@@ -6,6 +6,7 @@ import 'package:instagram_flutter/responsive/mobile_screen_layout.dart';
 import 'package:instagram_flutter/responsive/responsive_layout.dart';
 import 'package:instagram_flutter/responsive/web_screen_layout.dart';
 import 'package:instagram_flutter/utils/colors.dart' as theme;
+import 'package:instagram_flutter/views/login_view.dart';
 import 'package:instagram_flutter/views/register_view.dart';
 
 void main() async {
@@ -42,9 +43,12 @@ class MyApp extends StatelessWidget {
                 );
               }
             }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return const LoginView();
           }),
 
       routes: {
