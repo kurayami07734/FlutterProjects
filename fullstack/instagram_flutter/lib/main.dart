@@ -11,6 +11,8 @@ import 'package:instagram_flutter/views/login_view.dart';
 import 'package:instagram_flutter/views/register_view.dart';
 import 'package:provider/provider.dart';
 
+import 'views/login_view.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
