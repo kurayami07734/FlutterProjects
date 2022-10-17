@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:instagram_flutter/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../utils/dimension.dart';
+import '../utils/global_variables.dart';
 
 class ResponsiveLayout extends StatefulWidget {
   final Widget webScreenLayout;
@@ -19,12 +20,12 @@ class ResponsiveLayout extends StatefulWidget {
 class _ResponsiveLayoutState extends State<ResponsiveLayout> {
   @override
   void initState() {
-    super.initState();
     addData();
+    super.initState();
   }
 
   addData() async {
-    final userProvider = Provider.of(
+    final UserProvider userProvider = Provider.of(
       context,
       listen: false,
     );
@@ -33,6 +34,7 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
 
   @override
   Widget build(BuildContext context) {
+    addData();
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth > webScreenSize) {
         return widget.webScreenLayout;

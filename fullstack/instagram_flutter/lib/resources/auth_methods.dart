@@ -32,6 +32,17 @@ class AuthMethods {
     return res;
   }
 
+  Future<String> logout() async {
+    String res = '';
+    try {
+      await _auth.signOut();
+      res = "success";
+    } catch (e) {
+      res = e.toString();
+    }
+    return res;
+  }
+
   Future<String> registerUser({
     required String email,
     required String password,

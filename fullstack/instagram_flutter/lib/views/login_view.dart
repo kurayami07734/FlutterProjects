@@ -91,6 +91,13 @@ class _LoginViewState extends State<LoginView> {
                         .pushNamedAndRemoveUntil('/register/', (route) => true);
                   },
                   child: const Text("Register here")),
+              TextButton(
+                onPressed: () async {
+                  String res = await AuthMethods().logout();
+                  showSnackBar(res, context);
+                },
+                child: const Text("Logout"),
+              ),
             ],
           ),
         ),
