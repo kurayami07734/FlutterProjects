@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quizapp/login/login_screen.dart';
+import 'package:quizapp/screens/login_screen.dart';
 import 'package:quizapp/services/auth.dart';
-import 'package:quizapp/topics/topics_screen.dart';
+import 'package:quizapp/screens/topic/topics_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
