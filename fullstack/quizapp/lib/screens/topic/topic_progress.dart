@@ -30,7 +30,7 @@ Widget _progressCount(Topic topic, Report report) {
     padding: const EdgeInsets.only(left: 8),
     child: Text(
       "${report.topics[topic.id]?.length ?? 0} / ${topic.quizzes.length}",
-      style: TextStyle(
+      style: const TextStyle(
         color: Colors.grey,
         fontSize: 10,
       ),

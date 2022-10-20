@@ -52,7 +52,7 @@ class LoginScreen extends StatelessWidget {
                 color: Colors.blue,
                 icon: FontAwesomeIcons.google,
                 text: 'Continue with Google',
-                loginMethod: AuthService().googleLogin,
+                loginMethod: () => AuthService().googleLogin(context),
               ),
             ),
             Flexible(
@@ -60,7 +60,7 @@ class LoginScreen extends StatelessWidget {
                 color: Colors.deepPurple,
                 icon: FontAwesomeIcons.userNinja,
                 text: 'Continue as a Guest',
-                loginMethod: AuthService().anonLogin,
+                loginMethod: () => AuthService().anonLogin(context),
               ),
             ),
           ],

@@ -10,8 +10,10 @@ bottomSheet(BuildContext context, Option opt, QuizState state) {
     builder: (context) {
       return Container(
         padding: const EdgeInsets.all(16),
-        height: 250,
+        height: MediaQuery.of(context).size.height * 0.18,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(correct ? "Good job" : "Wrong"),
             Text(
